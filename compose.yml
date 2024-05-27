@@ -1,0 +1,31 @@
+services:
+  back:
+    build:
+      context: ./back/
+      dockerfile: Dockerfile
+    ports:
+      - 8080:8080
+    volumes:
+      - ./back:/app 
+    depends_on:
+      - db
+  front:
+    build:
+      context: ./front/
+      dockerfile: Dockerfile
+    volumes:
+      - ./front:/app
+    ports:
+      - 3000:3000 
+  db:
+    image: "postgres:15-alpine"
+    ports:
+      - "5432:5432"
+    environment:
+      - POSTGRES_PASSWORD=password
+      - POSTGRES_DB=book_db
+    volumes:
+      - db-store:/var/lib/postgresql/data
+
+volumes:
+  db-store:

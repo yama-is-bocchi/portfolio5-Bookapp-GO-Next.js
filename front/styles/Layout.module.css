@@ -1,0 +1,14 @@
+.container {
+    display: flex;
+  }
+  
+  .sidebar {
+    flex: 0 0 200px; /* サイドバーの幅を設定 */
+    background-color: #f0f0f0;
+    padding: 20px;
+  }
+  
+  .content {
+    flex: 1; /* コンテンツエリアを伸縮させる */
+    padding: 20px;
+  }
