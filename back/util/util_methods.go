@@ -1,22 +1,22 @@
-package util 
+package util
 
-import(
+import (
 	"Bookapp/ent"
 	"Bookapp/ent/user"
-	"context"
 	"Bookapp/structs"
+	"context"
 	"strings"
 )
 
-//名前からユーザーの情報を取得
-func GetUserEnt(Name string)(*ent.User,error){
+// 名前からユーザーの情報を取得
+func GetUserEnt(Name string) (*ent.User, error) {
 	user, err := structs.Client.User.Query().
-	Where(user.NameEQ(Name)).
-	First(context.Background())
-	return user,err
+		Where(user.NameEQ(Name)).
+		First(context.Background())
+	return user, err
 }
 
-//エスケープ処理関数
+// エスケープ処理関数
 func EscapeInput(input string) string {
 	// 置き換える特殊文字のリストを定義
 	specialChars := []string{
@@ -30,6 +30,10 @@ func EscapeInput(input string) string {
 		input = strings.ReplaceAll(input, char, "")
 	}
 
+	// 文字列の長さが100文字以上の場合に、100文字目で切り取る
+	if len(input) >= 200 {
+		input = input[:200]
+	}
+
 	return input
 }
-

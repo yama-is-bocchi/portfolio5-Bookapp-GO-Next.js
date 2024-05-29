@@ -36,9 +36,11 @@ type UserEdges struct {
 	Locks []*Lock `json:"locks,omitempty"`
 	// Tokens holds the value of the tokens edge.
 	Tokens []*Token `json:"tokens,omitempty"`
+	// Admins holds the value of the admins edge.
+	Admins []*Admin `json:"admins,omitempty"`
 	// loadedTypes holds the information for reporting if a
 	// type was loaded (or requested) in eager-loading or not.
-	loadedTypes [4]bool
+	loadedTypes [5]bool
 }
 
 // BooksOrErr returns the Books value or an error if the edge
@@ -75,6 +77,15 @@ func (e UserEdges) TokensOrErr() ([]*Token, error) {
 		return e.Tokens, nil
 	}
 	return nil, &NotLoadedError{edge: "tokens"}
+}
+
+// AdminsOrErr returns the Admins value or an error if the edge
+// was not loaded in eager-loading.
+func (e UserEdges) AdminsOrErr() ([]*Admin, error) {
+	if e.loadedTypes[4] {
+		return e.Admins, nil
+	}
+	return nil, &NotLoadedError{edge: "admins"}
 }
 
 // scanValues returns the types for scanning values from sql.Rows.
@@ -150,6 +161,11 @@ func (u *User) QueryLocks() *LockQuery {
 // QueryTokens queries the "tokens" edge of the User entity.
 func (u *User) QueryTokens() *TokenQuery {
 	return NewUserClient(u.config).QueryTokens(u)
+}
+
+// QueryAdmins queries the "admins" edge of the User entity.
+func (u *User) QueryAdmins() *AdminQuery {
+	return NewUserClient(u.config).QueryAdmins(u)
 }
 
 // Update returns a builder for updating this User.

@@ -2,6 +2,7 @@ package main
 
 import (
 	"Bookapp/book_methods"
+	"Bookapp/admin_methods"
 	"Bookapp/ent"
 	"Bookapp/sign"
 	"Bookapp/structs"
@@ -62,7 +63,11 @@ func main() {
 	router.POST("books/get_list",book_methods.GetListHandler)//ユーザーの本リスト取得
 	router.POST("books/update",book_methods.UpdateHandler)//本のアップデート
 	router.POST("books/delete",book_methods.DeleteHandler)//選択削除処理
-
+	router.POST("admin/sign_in",admin_methods.AdminSignInHandler)//管理者サインイン
+	router.POST("admin/book_resgister",admin_methods.SuggestRegisterHandler)//おすすめ本登録
+	router.POST("admin/book_get_list",admin_methods.SuggestGetListHandler)//おすすめ本リスト取得
+	router.POST("admin/book_update",admin_methods.SuggestUpdateHandler)//おすすめ本アップデート
+	router.POST("admin/book_delete",admin_methods.SuggestDeleteHandler)//おすすめ本選択削除処理
 	// サーバー起動
 	router.Run(":8080")
 }

@@ -8,6 +8,25 @@ import (
 )
 
 var (
+	// AdminsColumns holds the columns for the "admins" table.
+	AdminsColumns = []*schema.Column{
+		{Name: "id", Type: field.TypeInt, Increment: true},
+		{Name: "user_id", Type: field.TypeInt},
+	}
+	// AdminsTable holds the schema information for the "admins" table.
+	AdminsTable = &schema.Table{
+		Name:       "admins",
+		Columns:    AdminsColumns,
+		PrimaryKey: []*schema.Column{AdminsColumns[0]},
+		ForeignKeys: []*schema.ForeignKey{
+			{
+				Symbol:     "admins_users_admins",
+				Columns:    []*schema.Column{AdminsColumns[1]},
+				RefColumns: []*schema.Column{UsersColumns[0]},
+				OnDelete:   schema.NoAction,
+			},
+		},
+	}
 	// BooksColumns holds the columns for the "books" table.
 	BooksColumns = []*schema.Column{
 		{Name: "id", Type: field.TypeInt, Increment: true},
@@ -70,6 +89,20 @@ var (
 			},
 		},
 	}
+	// SuggestBooksColumns holds the columns for the "suggest_books" table.
+	SuggestBooksColumns = []*schema.Column{
+		{Name: "id", Type: field.TypeInt, Increment: true},
+		{Name: "title", Type: field.TypeString, Unique: true},
+		{Name: "kind", Type: field.TypeString},
+		{Name: "price", Type: field.TypeInt},
+		{Name: "memo", Type: field.TypeString},
+	}
+	// SuggestBooksTable holds the schema information for the "suggest_books" table.
+	SuggestBooksTable = &schema.Table{
+		Name:       "suggest_books",
+		Columns:    SuggestBooksColumns,
+		PrimaryKey: []*schema.Column{SuggestBooksColumns[0]},
+	}
 	// TokensColumns holds the columns for the "tokens" table.
 	TokensColumns = []*schema.Column{
 		{Name: "id", Type: field.TypeInt, Increment: true},
@@ -105,15 +138,18 @@ var (
 	}
 	// Tables holds all the tables in the schema.
 	Tables = []*schema.Table{
+		AdminsTable,
 		BooksTable,
 		LocksTable,
 		MissesTable,
+		SuggestBooksTable,
 		TokensTable,
 		UsersTable,
 	}
 )
 
 func init() {
+	AdminsTable.ForeignKeys[0].RefTable = UsersTable
 	BooksTable.ForeignKeys[0].RefTable = UsersTable
 	LocksTable.ForeignKeys[0].RefTable = UsersTable
 	MissesTable.ForeignKeys[0].RefTable = UsersTable

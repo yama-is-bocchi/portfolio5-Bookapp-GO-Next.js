@@ -92,3 +92,9 @@ export function EscapeInput(Input: string): string {
   // 正規表現を使って特殊文字を置き換える
   return Input.replace(/[&<>"'\/\\`=$;:(){}[\]|^%~#@!*?+]/g, (char) => specialChars[char] || '');
 }
+
+//入力が数値のみの場合trueを返す関数
+export function isNumericString(value: string): boolean {
+  // 正規表現を使用して、文字列が0-9の数字のみで構成されているかを確認
+  return /^[0-9]+$/.test(value);
+}

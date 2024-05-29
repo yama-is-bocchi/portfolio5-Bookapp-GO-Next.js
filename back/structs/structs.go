@@ -27,6 +27,7 @@ type BookRegisterRequest struct {
 	Memo string `json:"memo" binding:"required"`
 	Token string `json:"token" binding:"required"`
 }
+
 // 本更新する際に送られてくるリクエストの型定義
 type BookUpdateRequest struct {
 	Pretitle string `json:"Pretitle" binding:"required"`
@@ -36,6 +37,8 @@ type BookUpdateRequest struct {
 	Memo string `json:"memo" binding:"required"`
 	Token string `json:"token" binding:"required"`
 }
+
+
 //テーブルにユーザーIDが存在するか確認する関数の型定義
 type ExitsChecktype func(int) bool
 

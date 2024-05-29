@@ -37,3 +37,4 @@ export async function SubmitSignIn(Name: string,Password:string) {
     .then(data=>resolve(data));
   });
 }
+

@@ -7,6 +7,7 @@ import (
 	"Bookapp/ent/lock"
 	"Bookapp/ent/miss"
 	"Bookapp/ent/schema"
+	"Bookapp/ent/suggestbook"
 	"Bookapp/ent/token"
 	"Bookapp/ent/user"
 	"time"
@@ -38,6 +39,16 @@ func init() {
 	missDescCount := missFields[1].Descriptor()
 	// miss.CountValidator is a validator for the "count" field. It is called by the builders before save.
 	miss.CountValidator = missDescCount.Validators[0].(func(int) error)
+	suggestbookFields := schema.SuggestBook{}.Fields()
+	_ = suggestbookFields
+	// suggestbookDescKind is the schema descriptor for kind field.
+	suggestbookDescKind := suggestbookFields[1].Descriptor()
+	// suggestbook.KindValidator is a validator for the "kind" field. It is called by the builders before save.
+	suggestbook.KindValidator = suggestbookDescKind.Validators[0].(func(string) error)
+	// suggestbookDescPrice is the schema descriptor for price field.
+	suggestbookDescPrice := suggestbookFields[2].Descriptor()
+	// suggestbook.PriceValidator is a validator for the "price" field. It is called by the builders before save.
+	suggestbook.PriceValidator = suggestbookDescPrice.Validators[0].(func(int) error)
 	tokenFields := schema.Token{}.Fields()
 	_ = tokenFields
 	// tokenDescToken is the schema descriptor for token field.

@@ -3,6 +3,7 @@
 package ent
 
 import (
+	"Bookapp/ent/admin"
 	"Bookapp/ent/book"
 	"Bookapp/ent/lock"
 	"Bookapp/ent/miss"
@@ -93,6 +94,21 @@ func (uc *UserCreate) AddTokens(t ...*Token) *UserCreate {
 		ids[i] = t[i].ID
 	}
 	return uc.AddTokenIDs(ids...)
+}
+
+// AddAdminIDs adds the "admins" edge to the Admin entity by IDs.
+func (uc *UserCreate) AddAdminIDs(ids ...int) *UserCreate {
+	uc.mutation.AddAdminIDs(ids...)
+	return uc
+}
+
+// AddAdmins adds the "admins" edges to the Admin entity.
+func (uc *UserCreate) AddAdmins(a ...*Admin) *UserCreate {
+	ids := make([]int, len(a))
+	for i := range a {
+		ids[i] = a[i].ID
+	}
+	return uc.AddAdminIDs(ids...)
 }
 
 // Mutation returns the UserMutation object of the builder.
@@ -231,6 +247,22 @@ func (uc *UserCreate) createSpec() (*User, *sqlgraph.CreateSpec) {
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
 				IDSpec: sqlgraph.NewFieldSpec(token.FieldID, field.TypeInt),
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges = append(_spec.Edges, edge)
+	}
+	if nodes := uc.mutation.AdminsIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.O2M,
+			Inverse: false,
+			Table:   user.AdminsTable,
+			Columns: []string{user.AdminsColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: sqlgraph.NewFieldSpec(admin.FieldID, field.TypeInt),
 			},
 		}
 		for _, k := range nodes {

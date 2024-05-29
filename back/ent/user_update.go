@@ -3,6 +3,7 @@
 package ent
 
 import (
+	"Bookapp/ent/admin"
 	"Bookapp/ent/book"
 	"Bookapp/ent/lock"
 	"Bookapp/ent/miss"
@@ -119,6 +120,21 @@ func (uu *UserUpdate) AddTokens(t ...*Token) *UserUpdate {
 	return uu.AddTokenIDs(ids...)
 }
 
+// AddAdminIDs adds the "admins" edge to the Admin entity by IDs.
+func (uu *UserUpdate) AddAdminIDs(ids ...int) *UserUpdate {
+	uu.mutation.AddAdminIDs(ids...)
+	return uu
+}
+
+// AddAdmins adds the "admins" edges to the Admin entity.
+func (uu *UserUpdate) AddAdmins(a ...*Admin) *UserUpdate {
+	ids := make([]int, len(a))
+	for i := range a {
+		ids[i] = a[i].ID
+	}
+	return uu.AddAdminIDs(ids...)
+}
+
 // Mutation returns the UserMutation object of the builder.
 func (uu *UserUpdate) Mutation() *UserMutation {
 	return uu.mutation
@@ -206,6 +222,27 @@ func (uu *UserUpdate) RemoveTokens(t ...*Token) *UserUpdate {
 		ids[i] = t[i].ID
 	}
 	return uu.RemoveTokenIDs(ids...)
+}
+
+// ClearAdmins clears all "admins" edges to the Admin entity.
+func (uu *UserUpdate) ClearAdmins() *UserUpdate {
+	uu.mutation.ClearAdmins()
+	return uu
+}
+
+// RemoveAdminIDs removes the "admins" edge to Admin entities by IDs.
+func (uu *UserUpdate) RemoveAdminIDs(ids ...int) *UserUpdate {
+	uu.mutation.RemoveAdminIDs(ids...)
+	return uu
+}
+
+// RemoveAdmins removes "admins" edges to Admin entities.
+func (uu *UserUpdate) RemoveAdmins(a ...*Admin) *UserUpdate {
+	ids := make([]int, len(a))
+	for i := range a {
+		ids[i] = a[i].ID
+	}
+	return uu.RemoveAdminIDs(ids...)
 }
 
 // Save executes the query and returns the number of nodes affected by the update operation.
@@ -443,6 +480,51 @@ func (uu *UserUpdate) sqlSave(ctx context.Context) (n int, err error) {
 		}
 		_spec.Edges.Add = append(_spec.Edges.Add, edge)
 	}
+	if uu.mutation.AdminsCleared() {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.O2M,
+			Inverse: false,
+			Table:   user.AdminsTable,
+			Columns: []string{user.AdminsColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: sqlgraph.NewFieldSpec(admin.FieldID, field.TypeInt),
+			},
+		}
+		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
+	}
+	if nodes := uu.mutation.RemovedAdminsIDs(); len(nodes) > 0 && !uu.mutation.AdminsCleared() {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.O2M,
+			Inverse: false,
+			Table:   user.AdminsTable,
+			Columns: []string{user.AdminsColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: sqlgraph.NewFieldSpec(admin.FieldID, field.TypeInt),
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
+	}
+	if nodes := uu.mutation.AdminsIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.O2M,
+			Inverse: false,
+			Table:   user.AdminsTable,
+			Columns: []string{user.AdminsColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: sqlgraph.NewFieldSpec(admin.FieldID, field.TypeInt),
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges.Add = append(_spec.Edges.Add, edge)
+	}
 	if n, err = sqlgraph.UpdateNodes(ctx, uu.driver, _spec); err != nil {
 		if _, ok := err.(*sqlgraph.NotFoundError); ok {
 			err = &NotFoundError{user.Label}
@@ -551,6 +633,21 @@ func (uuo *UserUpdateOne) AddTokens(t ...*Token) *UserUpdateOne {
 	return uuo.AddTokenIDs(ids...)
 }
 
+// AddAdminIDs adds the "admins" edge to the Admin entity by IDs.
+func (uuo *UserUpdateOne) AddAdminIDs(ids ...int) *UserUpdateOne {
+	uuo.mutation.AddAdminIDs(ids...)
+	return uuo
+}
+
+// AddAdmins adds the "admins" edges to the Admin entity.
+func (uuo *UserUpdateOne) AddAdmins(a ...*Admin) *UserUpdateOne {
+	ids := make([]int, len(a))
+	for i := range a {
+		ids[i] = a[i].ID
+	}
+	return uuo.AddAdminIDs(ids...)
+}
+
 // Mutation returns the UserMutation object of the builder.
 func (uuo *UserUpdateOne) Mutation() *UserMutation {
 	return uuo.mutation
@@ -638,6 +735,27 @@ func (uuo *UserUpdateOne) RemoveTokens(t ...*Token) *UserUpdateOne {
 		ids[i] = t[i].ID
 	}
 	return uuo.RemoveTokenIDs(ids...)
+}
+
+// ClearAdmins clears all "admins" edges to the Admin entity.
+func (uuo *UserUpdateOne) ClearAdmins() *UserUpdateOne {
+	uuo.mutation.ClearAdmins()
+	return uuo
+}
+
+// RemoveAdminIDs removes the "admins" edge to Admin entities by IDs.
+func (uuo *UserUpdateOne) RemoveAdminIDs(ids ...int) *UserUpdateOne {
+	uuo.mutation.RemoveAdminIDs(ids...)
+	return uuo
+}
+
+// RemoveAdmins removes "admins" edges to Admin entities.
+func (uuo *UserUpdateOne) RemoveAdmins(a ...*Admin) *UserUpdateOne {
+	ids := make([]int, len(a))
+	for i := range a {
+		ids[i] = a[i].ID
+	}
+	return uuo.RemoveAdminIDs(ids...)
 }
 
 // Where appends a list predicates to the UserUpdate builder.
@@ -898,6 +1016,51 @@ func (uuo *UserUpdateOne) sqlSave(ctx context.Context) (_node *User, err error) 
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
 				IDSpec: sqlgraph.NewFieldSpec(token.FieldID, field.TypeInt),
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges.Add = append(_spec.Edges.Add, edge)
+	}
+	if uuo.mutation.AdminsCleared() {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.O2M,
+			Inverse: false,
+			Table:   user.AdminsTable,
+			Columns: []string{user.AdminsColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: sqlgraph.NewFieldSpec(admin.FieldID, field.TypeInt),
+			},
+		}
+		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
+	}
+	if nodes := uuo.mutation.RemovedAdminsIDs(); len(nodes) > 0 && !uuo.mutation.AdminsCleared() {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.O2M,
+			Inverse: false,
+			Table:   user.AdminsTable,
+			Columns: []string{user.AdminsColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: sqlgraph.NewFieldSpec(admin.FieldID, field.TypeInt),
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
+	}
+	if nodes := uuo.mutation.AdminsIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.O2M,
+			Inverse: false,
+			Table:   user.AdminsTable,
+			Columns: []string{user.AdminsColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: sqlgraph.NewFieldSpec(admin.FieldID, field.TypeInt),
 			},
 		}
 		for _, k := range nodes {

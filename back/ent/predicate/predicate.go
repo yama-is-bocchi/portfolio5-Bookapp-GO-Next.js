@@ -6,6 +6,9 @@ import (
 	"entgo.io/ent/dialect/sql"
 )
 
+// Admin is the predicate function for admin builders.
+type Admin func(*sql.Selector)
+
 // Book is the predicate function for book builders.
 type Book func(*sql.Selector)
 
@@ -14,6 +17,9 @@ type Lock func(*sql.Selector)
 
 // Miss is the predicate function for miss builders.
 type Miss func(*sql.Selector)
+
+// SuggestBook is the predicate function for suggestbook builders.
+type SuggestBook func(*sql.Selector)
 
 // Token is the predicate function for token builders.
 type Token func(*sql.Selector)

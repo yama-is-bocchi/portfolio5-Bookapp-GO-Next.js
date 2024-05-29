@@ -8,6 +8,18 @@ import (
 	"fmt"
 )
 
+// The AdminFunc type is an adapter to allow the use of ordinary
+// function as Admin mutator.
+type AdminFunc func(context.Context, *ent.AdminMutation) (ent.Value, error)
+
+// Mutate calls f(ctx, m).
+func (f AdminFunc) Mutate(ctx context.Context, m ent.Mutation) (ent.Value, error) {
+	if mv, ok := m.(*ent.AdminMutation); ok {
+		return f(ctx, mv)
+	}
+	return nil, fmt.Errorf("unexpected mutation type %T. expect *ent.AdminMutation", m)
+}
+
 // The BookFunc type is an adapter to allow the use of ordinary
 // function as Book mutator.
 type BookFunc func(context.Context, *ent.BookMutation) (ent.Value, error)
@@ -42,6 +54,18 @@ func (f MissFunc) Mutate(ctx context.Context, m ent.Mutation) (ent.Value, error)
 		return f(ctx, mv)
 	}
 	return nil, fmt.Errorf("unexpected mutation type %T. expect *ent.MissMutation", m)
+}
+
+// The SuggestBookFunc type is an adapter to allow the use of ordinary
+// function as SuggestBook mutator.
+type SuggestBookFunc func(context.Context, *ent.SuggestBookMutation) (ent.Value, error)
+
+// Mutate calls f(ctx, m).
+func (f SuggestBookFunc) Mutate(ctx context.Context, m ent.Mutation) (ent.Value, error) {
+	if mv, ok := m.(*ent.SuggestBookMutation); ok {
+		return f(ctx, mv)
+	}
+	return nil, fmt.Errorf("unexpected mutation type %T. expect *ent.SuggestBookMutation", m)
 }
 
 // The TokenFunc type is an adapter to allow the use of ordinary

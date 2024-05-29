@@ -3,9 +3,11 @@
 package ent
 
 import (
+	"Bookapp/ent/admin"
 	"Bookapp/ent/book"
 	"Bookapp/ent/lock"
 	"Bookapp/ent/miss"
+	"Bookapp/ent/suggestbook"
 	"Bookapp/ent/token"
 	"Bookapp/ent/user"
 	"context"
@@ -77,11 +79,13 @@ var (
 func checkColumn(table, column string) error {
 	initCheck.Do(func() {
 		columnCheck = sql.NewColumnCheck(map[string]func(string) bool{
-			book.Table:  book.ValidColumn,
-			lock.Table:  lock.ValidColumn,
-			miss.Table:  miss.ValidColumn,
-			token.Table: token.ValidColumn,
-			user.Table:  user.ValidColumn,
+			admin.Table:       admin.ValidColumn,
+			book.Table:        book.ValidColumn,
+			lock.Table:        lock.ValidColumn,
+			miss.Table:        miss.ValidColumn,
+			suggestbook.Table: suggestbook.ValidColumn,
+			token.Table:       token.ValidColumn,
+			user.Table:        user.ValidColumn,
 		})
 	})
 	return columnCheck(table, column)
